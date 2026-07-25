@@ -22,7 +22,12 @@ const RegisterPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const result = await registerUser(data);
+      const payload = {
+        ...data,
+        dateOfBirth: data.dateOfBirth ? data.dateOfBirth : ''
+      };
+
+      const result = await registerUser(payload);
       showSuccess(`Digital Health ID Registered Successfully!`);
       if (result.user.role === 'PATIENT') navigate('/patient/dashboard');
       else if (result.user.role === 'DOCTOR') navigate('/doctor/dashboard');
@@ -105,6 +110,12 @@ const RegisterPage = () => {
           </>
         ) : (
           <>
+            <Input
+              label="Date of Birth"
+              type="date"
+              {...register('dateOfBirth', { required: 'DOB required' })}
+              error={errors.dateOfBirth?.message}
+            />
             <Input
               label="Medical License Number"
               placeholder="e.g. MCI-REG-84920"
