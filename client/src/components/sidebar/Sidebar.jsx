@@ -11,7 +11,8 @@ import {
   Building2,
   BarChart3,
   Stethoscope,
-  Shield
+  Shield,
+  User
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -20,6 +21,7 @@ const Sidebar = () => {
 
   const patientLinks = [
     { to: '/patient/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/patient/profile', label: 'My Profile', icon: User },
     { to: '/patient/health-card', label: 'Digital Health Card', icon: CreditCard },
     { to: '/patient/records', label: 'Medical History & Reports', icon: FileSpreadsheet },
     { to: '/patient/appointments', label: 'Book & Appointments', icon: CalendarCheck }
