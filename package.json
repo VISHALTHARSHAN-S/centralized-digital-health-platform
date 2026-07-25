@@ -1,0 +1,29 @@
+{
+  "name": "centralized-health-management-system",
+  "version": "1.0.0",
+  "description": "Centralized Digital Health Management System (CHMS) - Enterprise MERN Stack Platform",
+  "main": "server/server.js",
+  "scripts": {
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "seed": "cd server && npm run seed"
+  },
+  "keywords": [
+    "health",
+    "chms",
+    "health-id",
+    "mern",
+    "react",
+    "express",
+    "mongodb",
+    "healthcare-portal"
+  ],
+  "author": "CHMS Core Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
