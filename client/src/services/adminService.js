@@ -4,6 +4,9 @@ export const adminService = {
   getAnalytics: async () => {
     return await axiosClient.get('/admin/analytics');
   },
+  getDashboardStats: async () => {
+    return await axiosClient.get('/admin/dashboard-stats');
+  },
   getUsers: async (params = {}) => {
     return await axiosClient.get('/admin/users', { params });
   },

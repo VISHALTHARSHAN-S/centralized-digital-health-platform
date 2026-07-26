@@ -10,6 +10,9 @@ export const patientService = {
   getMedicalSummary: async () => {
     return await axiosClient.get('/patient/summary');
   },
+  getDashboardStats: async () => {
+    return await axiosClient.get('/patient/dashboard-stats');
+  },
   lookupByHealthId: async (healthId) => {
     return await axiosClient.get(`/patient/lookup/${healthId}`);
   }

@@ -67,24 +67,30 @@ class DoctorService {
   }
 
   async getDoctorDashboardStats(doctorId) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
 
-    const totalPatientsAttended = await Appointment.distinct('patientId', { doctorId, status: 'Completed' });
-    const todaysAppointments = await Appointment.find({
-      doctorId,
-      appointmentDate: { $gte: today }
-    })
-      .populate('patientId', 'fullName healthId bloodGroup gender contactNumber')
-      .sort({ appointmentDate: 1 });
+    const [totalPatientsAttended, todaysAppointments, totalReportsUploaded, totalPrescriptionsIssued] = await Promise.all([
+      Appointment.distinct('patientId', { doctorId, status: 'Completed' }).then((ids) => ids.length),
+      Appointment.find({
+        doctorId,
+        appointmentDate: { $gte: startOfDay, $lte: endOfDay }
+      })
+        .populate('patientId', 'fullName healthId bloodGroup gender contactNumber')
+        .sort({ appointmentDate: 1 }),
+      Report.countDocuments({ doctorId }),
+      Prescription.countDocuments({ doctorId })
+    ]);
 
-    const pendingConsultations = todaysAppointments.filter(a => a.status === 'Scheduled').length;
-    const totalPrescriptionsIssued = await Prescription.countDocuments({ doctorId });
+    const todaysPatients = new Set(todaysAppointments.map((appointment) => appointment.patientId?._id?.toString()).filter(Boolean)).size;
 
     return {
-      totalPatientsCount: totalPatientsAttended.length,
+      totalPatientsCount: totalPatientsAttended,
+      todaysPatients,
       todaysAppointmentsCount: todaysAppointments.length,
-      pendingConsultations,
+      totalReportsUploaded,
       totalPrescriptionsIssued,
       todaysAppointments
     };

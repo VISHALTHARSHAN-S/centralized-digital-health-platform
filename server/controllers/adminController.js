@@ -10,6 +10,15 @@ const getAnalytics = async (req, res, next) => {
   }
 };
 
+const getDashboardStats = async (req, res, next) => {
+  try {
+    const stats = await adminService.getDashboardStats();
+    return sendSuccess(res, 200, 'Admin dashboard statistics retrieved', stats);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getUsers = async (req, res, next) => {
   try {
     const users = await adminService.getAllUsers(req.query);
@@ -31,6 +40,7 @@ const updateUserStatus = async (req, res, next) => {
 
 module.exports = {
   getAnalytics,
+  getDashboardStats,
   getUsers,
   updateUserStatus
 };

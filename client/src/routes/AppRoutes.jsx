@@ -14,6 +14,8 @@ import PatientProfile from '../pages/Patient/PatientProfile';
 import HealthCardView from '../pages/Patient/HealthCardView';
 import ProtectedRoute from './ProtectedRoute';
 import DoctorPatientSearch from '../pages/Doctor/DoctorPatientSearch';
+import DoctorDashboard from '../pages/Doctor/DoctorDashboard';
+import AdminDashboard from '../pages/Admin/AdminDashboard';
 
 const PlaceholderPage = ({ title, description }) => (
   <div className="rounded-card border border-slate-200 bg-white p-8 shadow-card-soft">
@@ -42,11 +44,11 @@ const AppRoutes = () => {
           <Route path="/patient/appointments" element={<ProtectedRoute allowedRoles={['PATIENT']}><PatientAppointments /></ProtectedRoute>} />
           <Route path="/patient/profile" element={<ProtectedRoute allowedRoles={['PATIENT']}><PatientProfile /></ProtectedRoute>} />
 
-          <Route path="/doctor/dashboard" element={<ProtectedRoute allowedRoles={['DOCTOR']}><DoctorPatientSearch /></ProtectedRoute>} />
+          <Route path="/doctor/dashboard" element={<ProtectedRoute allowedRoles={['DOCTOR']}><DoctorDashboard /></ProtectedRoute>} />
           <Route path="/doctor/lookup" element={<ProtectedRoute allowedRoles={['DOCTOR']}><DoctorPatientSearch /></ProtectedRoute>} />
           <Route path="/doctor/appointments" element={<ProtectedRoute allowedRoles={['DOCTOR']}><PlaceholderPage title="Consultations Schedule" description="Doctor appointment views are being wired up." /></ProtectedRoute>} />
 
-          <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['ADMIN']}><PlaceholderPage title="Admin Dashboard" description="Administrative analytics views are being wired up." /></ProtectedRoute>} />
+          <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['ADMIN']}><PlaceholderPage title="User Directory" description="User management views are being wired up." /></ProtectedRoute>} />
           <Route path="/admin/hospitals" element={<ProtectedRoute allowedRoles={['ADMIN']}><PlaceholderPage title="Hospital Network" description="Hospital management views are being wired up." /></ProtectedRoute>} />
           <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['ADMIN']}><PlaceholderPage title="Healthcare Analytics" description="Analytics views are being wired up." /></ProtectedRoute>} />

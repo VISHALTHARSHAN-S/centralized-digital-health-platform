@@ -4,20 +4,29 @@ import MetricCard from '../../components/cards/MetricCard';
 import RecordCard from '../../components/cards/RecordCard';
 import HealthCard from '../../components/cards/HealthCard';
 import { CardSkeleton } from '../../components/common/LoadingSkeleton';
-import { FileText, CalendarCheck, FileSpreadsheet, Pill, ShieldCheck, Plus } from 'lucide-react';
+import { FileText, CalendarCheck, FileSpreadsheet, Pill, ShieldCheck, Plus, UserRound, Activity } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { Link } from 'react-router-dom';
 
 const PatientDashboard = () => {
   const [summaryData, setSummaryData] = useState(null);
+  const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    patientService.getMedicalSummary()
-      .then(res => {
-        if (res.data) setSummaryData(res.data);
+    Promise.all([
+      patientService.getMedicalSummary(),
+      patientService.getDashboardStats()
+    ])
+      .then(([summaryRes, statsRes]) => {
+        if (summaryRes.data) setSummaryData(summaryRes.data);
+        if (statsRes.data) setStatsData(statsRes.data);
       })
-      .catch(err => console.error('Failed to load patient summary:', err))
+      .catch(err => {
+        console.error('Failed to load patient dashboard:', err);
+        setError(err.message || 'Unable to load dashboard statistics.');
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -32,6 +41,7 @@ const PatientDashboard = () => {
   }
 
   const { patient, stats, recentRecords = [], recentPrescriptions = [], upcomingAppointments = [] } = summaryData || {};
+  const dashboardStats = statsData?.stats || {};
 
   return (
     <div className="space-y-8">
@@ -60,31 +70,41 @@ const PatientDashboard = () => {
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-card border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          {error}
+        </div>
+      )}
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
-          title="Medical Records"
-          value={stats?.totalRecords || 0}
-          icon={FileText}
-          color="blue"
-        />
-        <MetricCard
-          title="Lab & Scan Reports"
-          value={stats?.totalReports || 0}
+          title="Reports"
+          value={dashboardStats?.totalReports ?? stats?.totalReports ?? 0}
           icon={FileSpreadsheet}
           color="green"
+          subtitle="Medical reports on file"
         />
         <MetricCard
-          title="Prescriptions Issued"
-          value={stats?.totalPrescriptions || 0}
+          title="Doctors Visited"
+          value={dashboardStats?.doctorsVisited ?? 0}
+          icon={UserRound}
+          color="blue"
+          subtitle="Unique doctors seen"
+        />
+        <MetricCard
+          title="Active Prescriptions"
+          value={dashboardStats?.activePrescriptions ?? stats?.totalPrescriptions ?? 0}
           icon={Pill}
           color="purple"
+          subtitle="Current active treatments"
         />
         <MetricCard
-          title="Appointments"
-          value={stats?.totalAppointments || 0}
+          title="Upcoming Appointments"
+          value={dashboardStats?.upcomingAppointments ?? stats?.totalAppointments ?? 0}
           icon={CalendarCheck}
           color="amber"
+          subtitle="Scheduled consultations"
         />
       </div>
 

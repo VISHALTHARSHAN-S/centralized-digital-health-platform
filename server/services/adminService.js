@@ -7,6 +7,28 @@ const Appointment = require('../models/Appointment');
 const Report = require('../models/Report');
 
 class AdminService {
+  async getDashboardStats() {
+    const [totalPatients, totalDoctors, totalHospitals, totalReports, totalAppointments, totalUsers] = await Promise.all([
+      Patient.countDocuments(),
+      Doctor.countDocuments(),
+      Hospital.countDocuments(),
+      Report.countDocuments(),
+      Appointment.countDocuments(),
+      User.countDocuments()
+    ]);
+
+    return {
+      stats: {
+        totalPatients,
+        totalDoctors,
+        totalHospitals,
+        totalReports,
+        totalAppointments,
+        totalUsers
+      }
+    };
+  }
+
   async getAnalyticsDashboard() {
     const totalUsers = await User.countDocuments();
     const totalPatients = await Patient.countDocuments();

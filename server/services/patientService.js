@@ -67,6 +67,32 @@ class PatientService {
     };
   }
 
+  async getDashboardStats(patientId) {
+    const patient = await Patient.findById(patientId);
+    if (!patient) throw new Error('Patient not found');
+
+    const [totalReports, doctorsVisited, activePrescriptions, upcomingAppointments] = await Promise.all([
+      Report.countDocuments({ patientId }),
+      Appointment.distinct('doctorId', { patientId }).then((ids) => ids.length),
+      Prescription.countDocuments({ patientId, followUpDate: { $gte: new Date() } }),
+      Appointment.countDocuments({
+        patientId,
+        status: 'Scheduled',
+        appointmentDate: { $gte: new Date() }
+      })
+    ]);
+
+    return {
+      patient,
+      stats: {
+        totalReports,
+        doctorsVisited,
+        activePrescriptions,
+        upcomingAppointments
+      }
+    };
+  }
+
   async findByHealthId(healthId) {
     const cleanHealthId = healthId.trim().toUpperCase();
     const patient = await Patient.findOne({ healthId: cleanHealthId });

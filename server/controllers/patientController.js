@@ -29,6 +29,16 @@ const getMedicalSummary = async (req, res, next) => {
   }
 };
 
+const getDashboardStats = async (req, res, next) => {
+  try {
+    const patient = await patientService.getProfileByUserId(req.user._id);
+    const stats = await patientService.getDashboardStats(patient._id);
+    return sendSuccess(res, 200, 'Patient dashboard statistics retrieved', stats);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const lookupByHealthId = async (req, res, next) => {
   try {
     const patient = await patientService.findByHealthId(req.params.healthId);
@@ -42,5 +52,6 @@ module.exports = {
   getPatientProfile,
   updatePatientProfile,
   getMedicalSummary,
+  getDashboardStats,
   lookupByHealthId
 };
