@@ -30,6 +30,15 @@ const getPatientTimeline = async (req, res, next) => {
   }
 };
 
+const searchPatientByHealthId = async (req, res, next) => {
+  try {
+    const patientData = await doctorService.searchPatientByHealthId(req.params.healthId);
+    return sendSuccess(res, 200, 'Patient search completed', patientData);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getAllDoctors = async (req, res, next) => {
   try {
     const doctors = await Doctor.find().populate('hospitalId', 'name city state');
@@ -43,5 +52,6 @@ module.exports = {
   getDoctorProfile,
   getDashboardStats,
   getPatientTimeline,
+  searchPatientByHealthId,
   getAllDoctors
 };

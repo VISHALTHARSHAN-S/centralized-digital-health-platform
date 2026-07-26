@@ -13,6 +13,7 @@ import PatientRecords from '../pages/Patient/PatientRecords';
 import PatientProfile from '../pages/Patient/PatientProfile';
 import HealthCardView from '../pages/Patient/HealthCardView';
 import ProtectedRoute from './ProtectedRoute';
+import DoctorPatientSearch from '../pages/Doctor/DoctorPatientSearch';
 
 const PlaceholderPage = ({ title, description }) => (
   <div className="rounded-card border border-slate-200 bg-white p-8 shadow-card-soft">
@@ -41,8 +42,8 @@ const AppRoutes = () => {
           <Route path="/patient/appointments" element={<ProtectedRoute allowedRoles={['PATIENT']}><PatientAppointments /></ProtectedRoute>} />
           <Route path="/patient/profile" element={<ProtectedRoute allowedRoles={['PATIENT']}><PatientProfile /></ProtectedRoute>} />
 
-          <Route path="/doctor/dashboard" element={<ProtectedRoute allowedRoles={['DOCTOR']}><PlaceholderPage title="Doctor Dashboard" description="Doctor workspace views are being wired up." /></ProtectedRoute>} />
-          <Route path="/doctor/lookup" element={<ProtectedRoute allowedRoles={['DOCTOR']}><PlaceholderPage title="Health ID Lookup" description="Patient lookup functionality is being wired up." /></ProtectedRoute>} />
+          <Route path="/doctor/dashboard" element={<ProtectedRoute allowedRoles={['DOCTOR']}><DoctorPatientSearch /></ProtectedRoute>} />
+          <Route path="/doctor/lookup" element={<ProtectedRoute allowedRoles={['DOCTOR']}><DoctorPatientSearch /></ProtectedRoute>} />
           <Route path="/doctor/appointments" element={<ProtectedRoute allowedRoles={['DOCTOR']}><PlaceholderPage title="Consultations Schedule" description="Doctor appointment views are being wired up." /></ProtectedRoute>} />
 
           <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['ADMIN']}><PlaceholderPage title="Admin Dashboard" description="Administrative analytics views are being wired up." /></ProtectedRoute>} />

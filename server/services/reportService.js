@@ -41,14 +41,23 @@ class ReportService {
     }
 
     let doctorId = bodyData.doctorId;
+    let hospitalId = bodyData.hospitalId || null;
     if (uploaderUser.role === 'DOCTOR') {
       const doc = await Doctor.findOne({ userId: uploaderUser.id });
-      if (doc) doctorId = doc._id;
+      if (doc) {
+        doctorId = doc._id;
+        hospitalId = doc.hospitalId || hospitalId;
+      }
+    }
+
+    if (!hospitalId) {
+      throw new Error('Hospital information is required for report upload');
     }
 
     const report = await Report.create({
       patientId,
       doctorId: doctorId || null,
+      hospitalId,
       recordId: bodyData.recordId || null,
       title: bodyData.title || file.originalname,
       category: bodyData.category || 'Other',

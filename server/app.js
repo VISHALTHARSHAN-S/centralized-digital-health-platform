@@ -61,6 +61,7 @@ app.use('/api/v1/doctor', doctorRoutes);
 app.use('/api/v1/hospital', hospitalRoutes);
 app.use('/api/v1/record', recordRoutes);
 app.use('/api/v1/report', reportRoutes);
+app.use('/api/report', reportRoutes);
 app.use('/api/v1/prescription', prescriptionRoutes);
 app.use('/api/v1/appointment', appointmentRoutes);
 app.use('/api/v1/admin', adminRoutes);

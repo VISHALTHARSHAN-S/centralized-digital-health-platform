@@ -12,6 +12,11 @@ const reportSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Doctor'
   },
+  hospitalId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Hospital',
+    required: true
+  },
   recordId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MedicalRecord'

@@ -37,6 +37,35 @@ class DoctorService {
     };
   }
 
+  async searchPatientByHealthId(healthId) {
+    const normalizedHealthId = healthId.trim().toUpperCase();
+    const patient = await Patient.findOne({ healthId: normalizedHealthId });
+
+    if (!patient) {
+      throw new Error(`Patient with Health ID ${normalizedHealthId} not found`);
+    }
+
+    const [records, reports, prescriptions] = await Promise.all([
+      MedicalRecord.find({ patientId: patient._id })
+        .populate('doctorId', 'fullName specialization')
+        .populate('hospitalId', 'name city')
+        .sort({ recordDate: -1 }),
+      Report.find({ patientId: patient._id })
+        .populate('doctorId', 'fullName')
+        .sort({ uploadDate: -1 }),
+      Prescription.find({ patientId: patient._id })
+        .populate('doctorId', 'fullName specialization')
+        .sort({ issueDate: -1 })
+    ]);
+
+    return {
+      patient,
+      records,
+      reports,
+      prescriptions
+    };
+  }
+
   async getDoctorDashboardStats(doctorId) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);

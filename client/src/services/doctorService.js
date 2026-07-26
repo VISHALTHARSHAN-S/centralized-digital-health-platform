@@ -10,6 +10,9 @@ export const doctorService = {
   getPatientTimeline: async (healthId) => {
     return await axiosClient.get(`/doctor/timeline/${healthId}`);
   },
+  searchPatientByHealthId: async (healthId) => {
+    return await axiosClient.get(`/doctor/search/${healthId}`);
+  },
   getAllDoctors: async () => {
     return await axiosClient.get('/doctor/all');
   }

@@ -109,9 +109,9 @@ const PatientRecords = () => {
                 <p className="text-xs text-slate-500 mt-1">Uploaded: {formatDate(rep.uploadDate)} • {formatFileSize(rep.fileSize)}</p>
               </div>
               <div className="pt-3 border-t border-slate-100 flex justify-end">
-                <a href={rep.fileUrl} target="_blank" rel="noopener noreferrer">
+                <a href={rep.fileUrl} target="_blank" rel="noopener noreferrer" download>
                   <Button size="sm" variant="secondary" icon={Download}>
-                    View Document
+                    Download
                   </Button>
                 </a>
               </div>

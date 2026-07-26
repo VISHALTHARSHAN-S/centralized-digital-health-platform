@@ -1,11 +1,12 @@
 import axiosClient from '../api/axiosClient';
 
 export const reportService = {
-  uploadReport: async (formData) => {
+  uploadReport: async (formData, onUploadProgress) => {
     return await axiosClient.post('/report/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
-      }
+      },
+      onUploadProgress
     });
   },
   getReports: async (patientId, params = {}) => {
