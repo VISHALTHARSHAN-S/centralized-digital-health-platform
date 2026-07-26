@@ -15,7 +15,13 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    if (user.role === 'ADMIN') {
+      return <Navigate to="/admin/dashboard" replace />;
+    }
+    if (user.role === 'DOCTOR') {
+      return <Navigate to="/doctor/dashboard" replace />;
+    }
+    return <Navigate to="/patient/dashboard" replace />;
   }
 
   return children;

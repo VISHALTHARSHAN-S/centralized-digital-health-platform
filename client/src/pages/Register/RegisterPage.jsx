@@ -27,6 +27,11 @@ const RegisterPage = () => {
         dateOfBirth: data.dateOfBirth ? data.dateOfBirth : ''
       };
 
+      if (payload.role === 'ADMIN') {
+        payload.phoneNumber = data.phoneNumber;
+        payload.employeeId = data.employeeId;
+      }
+
       const result = await registerUser(payload);
       showSuccess(`Digital Health ID Registered Successfully!`);
       if (result.user.role === 'PATIENT') navigate('/patient/dashboard');
@@ -51,7 +56,8 @@ const RegisterPage = () => {
           label="Account Role"
           options={[
             { value: 'PATIENT', label: 'Citizen / Patient' },
-            { value: 'DOCTOR', label: 'Healthcare Provider / Doctor' }
+            { value: 'DOCTOR', label: 'Healthcare Provider / Doctor' },
+            { value: 'ADMIN', label: 'Administrator' }
           ]}
           {...register('role')}
         />
@@ -79,7 +85,22 @@ const RegisterPage = () => {
           error={errors.password?.message}
         />
 
-        {selectedRole === 'PATIENT' ? (
+        {selectedRole === 'ADMIN' ? (
+          <>
+            <Input
+              label="Phone Number"
+              placeholder="9876543210"
+              {...register('phoneNumber', { required: 'Phone number required' })}
+              error={errors.phoneNumber?.message}
+            />
+            <Input
+              label="Employee ID"
+              placeholder="e.g. EMP-1001"
+              {...register('employeeId', { required: 'Employee ID required' })}
+              error={errors.employeeId?.message}
+            />
+          </>
+        ) : selectedRole === 'PATIENT' ? (
           <>
             <div className="grid grid-cols-2 gap-3">
               <Input

@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Patient = require('../models/Patient');
 const Doctor = require('../models/Doctor');
 const Hospital = require('../models/Hospital');
+const Admin = require('../models/Admin');
 const generateHealthId = require('../utils/generateHealthId');
 const { generateAccessToken, generateRefreshToken } = require('../utils/generateToken');
 const qrcode = require('qrcode');
@@ -79,6 +80,14 @@ class AuthService {
         experienceYears: details.experienceYears || 8,
         consultationFee: details.consultationFee || 500
       });
+    } else if (role === 'ADMIN') {
+      profileData = await Admin.create({
+        userId: user._id,
+        fullName,
+        email,
+        phoneNumber: details.phoneNumber || details.contactNumber || '9999999999',
+        employeeId: details.employeeId || `EMP-${Date.now()}`
+      });
     }
 
     const tokenPayload = { id: user._id, role: user.role, email: user.email };
@@ -103,14 +112,15 @@ class AuthService {
   }
 
   async loginUser(email, password) {
-    const user = await User.findOne({ email }).select('+password');
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail }).select('+password');
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new Error('No account found for this email address');
     }
 
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
-      throw new Error('Invalid credentials');
+      throw new Error('Incorrect password. Please try again.');
     }
 
     if (user.status === 'SUSPENDED') {
@@ -122,6 +132,8 @@ class AuthService {
       profile = await Patient.findOne({ userId: user._id });
     } else if (user.role === 'DOCTOR') {
       profile = await Doctor.findOne({ userId: user._id }).populate('hospitalId', 'name city');
+    } else if (user.role === 'ADMIN') {
+      profile = await Admin.findOne({ userId: user._id });
     }
 
     const tokenPayload = { id: user._id, role: user.role, email: user.email };
@@ -154,6 +166,8 @@ class AuthService {
       profile = await Patient.findOne({ userId });
     } else if (role === 'DOCTOR') {
       profile = await Doctor.findOne({ userId }).populate('hospitalId');
+    } else if (role === 'ADMIN') {
+      profile = await Admin.findOne({ userId });
     }
 
     return {
